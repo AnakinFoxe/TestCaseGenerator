@@ -1,8 +1,8 @@
 import java.io.BufferedWriter;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Random;
 import java.util.Set;
 
@@ -11,12 +11,11 @@ import java.util.Set;
  * Created by Xing HU on 9/30/14.
  */
 public class TestCaseGenerator {
-
     // current test case index
-    private int tcIdx;
+    private int tcIdx_;
 
     // random number generator
-    private final Random rand;
+    private final Random rand_;
     // default ranges
     private int defRangeVal_;    // value range
     private int defRangeIdx_;    // index range
@@ -24,17 +23,17 @@ public class TestCaseGenerator {
 
     // distinct flag
     private boolean isValDistinct_;
-    private Set<Integer> valSet;
+    private Set<Integer> valSet_;
 
     public TestCaseGenerator() {
-        tcIdx = 1;  // starting from 1
+        tcIdx_ = 1;  // starting from 1
 
-        rand = new Random();
+        rand_ = new Random();
         defRangeVal_ = 30;
         defRangeIdx_ = 10;
 
         isValDistinct_ = true;
-        valSet = new HashSet<Integer>();
+        valSet_ = new HashSet<Integer>();
     }
 
     public int getDefRangeVal_() {
@@ -66,15 +65,15 @@ public class TestCaseGenerator {
 
         while (true) {
             if (range == RANDOM_RANGE_)
-                value = rand.nextInt(defRangeVal_);
+                value = rand_.nextInt(defRangeVal_);
             else
-                value = rand.nextInt(range);
+                value = rand_.nextInt(range);
 
             if (isValDistinct_()) {
-                if (valSet.contains(value))
+                if (valSet_.contains(value))
                     continue;
                 else
-                    valSet.add(value);
+                    valSet_.add(value);
             }
 
             break;
@@ -85,16 +84,25 @@ public class TestCaseGenerator {
 
     private int genIdx(int range) {
         if (range == RANDOM_RANGE_)
-            return rand.nextInt(defRangeIdx_);
+            return rand_.nextInt(defRangeIdx_);
         else
-            return rand.nextInt(range);
+            return rand_.nextInt(range);
     }
 
     private String genHeader() {
         // init value set
-        valSet = new HashSet<Integer>();
+        valSet_ = new HashSet<Integer>();
 
-        return "TESTCASE " + tcIdx++ + "\n";
+        return "TESTCASE " + tcIdx_++ + "\n";
+    }
+
+    private String printList(LinkedList<Integer> list) {
+        String tc = "print =";
+        for (Integer elem : list)
+            tc += " " + elem.toString();
+        tc += "\n";
+
+        return tc;
     }
 
     // Supported functionality:
@@ -110,60 +118,88 @@ public class TestCaseGenerator {
     // 1. Operations
     // 1.1 print (empty list)
     public String genTC1dot1(String tc) {
-        tc += "print\n";
+        tc += "print =\n";
 
         return tc;
     }
 
     // 1.2 print (non-empty list)
-    public String genTC1dot2(String tc) {
-        tc = genTC1dot4(tc);
-        tc += "print\n";
-
-        return tc;
-    }
+//    public String genTC1dot2(String tc) {
+//        tc = genTC1dot4(tc);
+//
+//        return tc;
+//    }
 
     // 1.3 insert elements (empty or non-empty list)
     public String genTC1dot3(String tc) {
+        // construct a linked list to generate result
+        LinkedList<Integer> list = new LinkedList<>();
+
         int noe = genIdx(RANDOM_RANGE_) + 1; // number of elements
         for (int idx = 1; idx <= noe; idx++) {
             int position = genIdx(idx);
             int value = genVal(RANDOM_RANGE_);
             tc += "insert " + position + " " + value + "\n";
+
+            list.add(position, value);
         }
+
+        // print result
+        tc += printList(list);
 
         return tc;
     }
 
     // 1.4 append elements (empty or non-empty list)
     public String genTC1dot4(String tc) {
+        // construct a linked list to generate result
+        LinkedList<Integer> list = new LinkedList<>();
+
         int noe = genIdx(RANDOM_RANGE_) + 1; // number of elements
         for (int idx = 1; idx <= noe; idx++) {
             int value = genVal(RANDOM_RANGE_);
             tc += "append " + value + "\n";
+
+            list.addLast(value);
         }
+
+        // print result
+        tc += printList(list);
 
         return tc;
     }
 
     // 1.5 prepend elements (empty or non-empty list)
     public String genTC1dot5(String tc) {
+        // construct a linked list to generate result
+        LinkedList<Integer> list = new LinkedList<>();
+
         int noe = genIdx(RANDOM_RANGE_) + 1; // number of elements
         for (int idx = 1; idx <= noe; idx++) {
             int value = genVal(RANDOM_RANGE_);
             tc += "prepend " + value + "\n";
+
+            list.addFirst(value);
         }
+
+        // print result
+        tc += printList(list);
 
         return tc;
     }
 
     // 1.6 delete elements (non-empty list)
     public String genTC1dot6(String tc) {
+        // construct a linked list to generate result
+        LinkedList<Integer> list = new LinkedList<>();
+
         // first create a list with elements
         int noe = genIdx(RANDOM_RANGE_) + 1; // number of elements
         for (int idx = 1; idx <= noe; idx++) {
             int value = genVal(RANDOM_RANGE_);
             tc += "append " + value + "\n";
+
+            list.addLast(value);
         }
 
         // then delete some or all of the elements
@@ -171,13 +207,21 @@ public class TestCaseGenerator {
         for (int idx = noe2delete; idx > 0; idx--) {
             int position = genIdx(idx);
             tc += "deleteElemAt " + position + "\n";
+
+            list.remove(position);
         }
+
+        // print result
+        tc += printList(list);
 
         return tc;
     }
 
     // 1.7 find elements (non-empty list)
     public String genTC1dot7(String tc) {
+        // construct a linked list to generate result
+        LinkedList<Integer> list = new LinkedList<>();
+
         // first create a list with elements
         int noe = genIdx(RANDOM_RANGE_) + 1; // number of elements
         Set<Integer> values = new HashSet<Integer>();
@@ -185,31 +229,43 @@ public class TestCaseGenerator {
             int value = genVal(RANDOM_RANGE_);
             tc += "append " + value + "\n";
             values.add(value);
+
+            list.addLast(value);
         }
 
         // then find elements
-        for (Integer value : values) {
-            tc += "findElem " + value.toString() + "\n";
-        }
+        for (Integer value : values)
+            tc += "findElem " + value.toString() + " = " + list.indexOf(value) + "\n";
+
+        // print result
+        tc += printList(list);
 
         return tc;
     }
 
     // 1.8 read elements (non-empty list)
     public String genTC1dot8(String tc) {
+        // construct a linked list to generate result
+        LinkedList<Integer> list = new LinkedList<>();
+
         // first create a list with elements
         int noe = genIdx(RANDOM_RANGE_) + 1; // number of elements
         for (int idx = 1; idx <= noe; idx++) {
             int value = genVal(RANDOM_RANGE_);
             tc += "append " + value + "\n";
+
+            list.addLast(value);
         }
 
         // then read some or all of the elements
         int noe2delete = genIdx(noe) + 1;
         for (int idx = noe2delete; idx > 0; idx--) {
             int position = genIdx(idx);
-            tc += "readElemAt " + position + "\n";
+            tc += "readElemAt " + position + " = " + list.get(position) + "\n";
         }
+
+        // print result
+        tc += printList(list);
 
         return tc;
     }
@@ -323,8 +379,8 @@ public class TestCaseGenerator {
         tc += tcg.genHeader();
         tc = tcg.genTC1dot1(tc);
 
-        tc += tcg.genHeader();
-        tc = tcg.genTC1dot2(tc);
+//        tc += tcg.genHeader();
+//        tc = tcg.genTC1dot2(tc);
 
         tc += tcg.genHeader();
         tc = tcg.genTC1dot3(tc);
@@ -343,29 +399,37 @@ public class TestCaseGenerator {
 
         tc += tcg.genHeader();
         tc = tcg.genTC1dot8(tc);
-
-
-        tc += tcg.genHeader();
-        tc = tcg.genTC2dot1(tc);
-
-        tc += tcg.genHeader();
-        tc = tcg.genTC2dot2(tc);
-
-        tc += tcg.genHeader();
-        tc = tcg.genTC2dot3(tc);
-
-        tc += tcg.genHeader();
-        tc = tcg.genTC2dot4(tc);
-
-        tc += tcg.genHeader();
-        tc = tcg.genTC2dot5(tc);
-
-        tc += tcg.genHeader();
-        tc = tcg.genTC2dot6(tc);
+//
+//
+//        tc += tcg.genHeader();
+//        tc = tcg.genTC2dot1(tc);
+//
+//        tc += tcg.genHeader();
+//        tc = tcg.genTC2dot2(tc);
+//
+//        tc += tcg.genHeader();
+//        tc = tcg.genTC2dot3(tc);
+//
+//        tc += tcg.genHeader();
+//        tc = tcg.genTC2dot4(tc);
+//
+//        tc += tcg.genHeader();
+//        tc = tcg.genTC2dot5(tc);
+//
+//        tc += tcg.genHeader();
+//        tc = tcg.genTC2dot6(tc);
 
         try (BufferedWriter bw = new BufferedWriter(fw)) {
             bw.write(tc);
         }
         System.out.println(tc);
+
+
+//        LinkedList<Integer> list = new LinkedList<>();
+//        list.add(0, 11);
+//        list.add(13);
+//        list.addFirst(10);
+//        list.addLast(15);
+//        System.out.println(list.peek());
     }
 }
