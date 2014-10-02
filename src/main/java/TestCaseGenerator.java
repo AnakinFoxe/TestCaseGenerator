@@ -399,37 +399,30 @@ public class TestCaseGenerator {
 
         tc += tcg.genHeader();
         tc = tcg.genTC1dot8(tc);
-//
-//
-//        tc += tcg.genHeader();
-//        tc = tcg.genTC2dot1(tc);
-//
-//        tc += tcg.genHeader();
-//        tc = tcg.genTC2dot2(tc);
-//
-//        tc += tcg.genHeader();
-//        tc = tcg.genTC2dot3(tc);
-//
-//        tc += tcg.genHeader();
-//        tc = tcg.genTC2dot4(tc);
-//
-//        tc += tcg.genHeader();
-//        tc = tcg.genTC2dot5(tc);
-//
-//        tc += tcg.genHeader();
-//        tc = tcg.genTC2dot6(tc);
+
+
+        tc += tcg.genHeader();
+        tc = tcg.genTC2dot1(tc);
+
+        tc += tcg.genHeader();
+        tc = tcg.genTC2dot2(tc);
+
+        tc += tcg.genHeader();
+        tc = tcg.genTC2dot3(tc);
+
+        tc += tcg.genHeader();
+        tc = tcg.genTC2dot4(tc);
+
+        tc += tcg.genHeader();
+        tc = tcg.genTC2dot5(tc);
+
+        tc += tcg.genHeader();
+        tc = tcg.genTC2dot6(tc);
 
         try (BufferedWriter bw = new BufferedWriter(fw)) {
             bw.write(tc);
         }
         System.out.println(tc);
 
-
-//        LinkedList<Integer> list = new LinkedList<>();
-//        list.add(0, 11);
-//        list.add(13);
-//        list.addFirst(10);
-//        list.addLast(15);
-//        System.out.println(list.peek());
     }
 }
