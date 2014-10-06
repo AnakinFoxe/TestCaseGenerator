@@ -36,6 +36,8 @@ public class TestCaseGenerator {
         valSet_ = new HashSet<Integer>();
     }
 
+    public void resetTcIdx() {tcIdx_ = 1;}
+
     public int getDefRangeVal_() {
         return defRangeVal_;
     }
@@ -372,57 +374,96 @@ public class TestCaseGenerator {
 
 
     public static void main (String[] args) throws IOException {
-        FileWriter fw = new FileWriter("test.txt");
-
         TestCaseGenerator tcg = new TestCaseGenerator();
         String tc = "";
-        tc += tcg.genHeader();
-        tc = tcg.genTC1dot1(tc);
 
-//        tc += tcg.genHeader();
-//        tc = tcg.genTC1dot2(tc);
+        // for text.txt, include all normal cases
+        FileWriter fw = new FileWriter("test.txt");
 
-        tc += tcg.genHeader();
-        tc = tcg.genTC1dot3(tc);
+        for (int repeat = 0; repeat < 7; ++repeat) {
+            tc += tcg.genHeader();
+            tc = tcg.genTC1dot1(tc);
 
-        tc += tcg.genHeader();
-        tc = tcg.genTC1dot4(tc);
+            tc += tcg.genHeader();
+            tc = tcg.genTC1dot3(tc);
 
-        tc += tcg.genHeader();
-        tc = tcg.genTC1dot5(tc);
+            tc += tcg.genHeader();
+            tc = tcg.genTC1dot4(tc);
+
+            tc += tcg.genHeader();
+            tc = tcg.genTC1dot5(tc);
+
+            tc += tcg.genHeader();
+            tc = tcg.genTC1dot6(tc);
+
+            tc += tcg.genHeader();
+            tc = tcg.genTC1dot7(tc);
+
+            tc += tcg.genHeader();
+            tc = tcg.genTC1dot8(tc);
+        }
 
         tc += tcg.genHeader();
         tc = tcg.genTC1dot6(tc);
-
-        tc += tcg.genHeader();
-        tc = tcg.genTC1dot7(tc);
-
-        tc += tcg.genHeader();
-        tc = tcg.genTC1dot8(tc);
-
-
-        tc += tcg.genHeader();
-        tc = tcg.genTC2dot1(tc);
-
-        tc += tcg.genHeader();
-        tc = tcg.genTC2dot2(tc);
-
-        tc += tcg.genHeader();
-        tc = tcg.genTC2dot3(tc);
-
-        tc += tcg.genHeader();
-        tc = tcg.genTC2dot4(tc);
-
-        tc += tcg.genHeader();
-        tc = tcg.genTC2dot5(tc);
-
-        tc += tcg.genHeader();
-        tc = tcg.genTC2dot6(tc);
 
         try (BufferedWriter bw = new BufferedWriter(fw)) {
             bw.write(tc);
         }
         System.out.println(tc);
+
+        // for eval.txt, include all kinds of cases
+        fw = new FileWriter("eval.txt");
+        tcg.resetTcIdx();
+
+        for (int repeat = 0; repeat < 4; ++repeat) {
+            // normal cases
+            tc += tcg.genHeader();
+            tc = tcg.genTC1dot1(tc);
+
+            tc += tcg.genHeader();
+            tc = tcg.genTC1dot3(tc);
+
+            tc += tcg.genHeader();
+            tc = tcg.genTC1dot4(tc);
+
+            tc += tcg.genHeader();
+            tc = tcg.genTC1dot5(tc);
+
+            tc += tcg.genHeader();
+            tc = tcg.genTC1dot6(tc);
+
+            tc += tcg.genHeader();
+            tc = tcg.genTC1dot7(tc);
+
+            tc += tcg.genHeader();
+            tc = tcg.genTC1dot8(tc);
+
+            // abnormal cases
+            tc += tcg.genHeader();
+            tc = tcg.genTC2dot1(tc);
+
+            tc += tcg.genHeader();
+            tc = tcg.genTC2dot2(tc);
+
+            tc += tcg.genHeader();
+            tc = tcg.genTC2dot3(tc);
+
+            tc += tcg.genHeader();
+            tc = tcg.genTC2dot4(tc);
+
+            tc += tcg.genHeader();
+            tc = tcg.genTC2dot5(tc);
+
+            tc += tcg.genHeader();
+            tc = tcg.genTC2dot6(tc);
+
+        }
+
+        try (BufferedWriter bw = new BufferedWriter(fw)) {
+            bw.write(tc);
+        }
+        System.out.println(tc);
+
 
     }
 }
