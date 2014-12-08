@@ -1,17 +1,19 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Stack;
+import java.util.*;
 
 /**
- * Created by Xing HU on 10/11/14.
+ * Created by Xing HU on 11/8/14.
  */
-public class TCGStack extends TestCaseGenerator {
+public class TCGQueue extends TestCaseGenerator {
 
-    private String printStack(Stack<Integer> stack) {
+    private String printQueue(ArrayDeque<Integer> queue) {
         String tc = "print =";
-        for (int idx = stack.size() - 1; idx >= 0; --idx)
-            tc += " " + stack.get(idx).toString();
+        Iterator it = queue.iterator();
+        while (it.hasNext()) {
+            tc += " " + it.next().toString();
+        }
         tc += "\n";
 
         return tc;
@@ -20,185 +22,185 @@ public class TCGStack extends TestCaseGenerator {
     // Supported functionality:
     //   print
     //   peek
-    //   push(value)
-    //   pop
+    //   enqueue(value)
+    //   dequeue
 
     // Test Cases
     // 1. Operations
-    // 1.1 print (empty stack)
+    // 1.1 print (empty queue)
     public String genTC1dot1(String tc) {
         tc += "print =\n";
 
         return tc;
     }
 
-    // 1.2 peek (non-empty stack)
+    // 1.2 peek (non-empty queue)
     public String genTC1dot2(String tc) {
-        // construct a stack to generate result
-        Stack<Integer> stack = new Stack<>();
+        // construct a queue to generate result
+        ArrayDeque<Integer> queue = new ArrayDeque<>();
 
         int noe = genIdx(RANDOM_RANGE_) + 1; // number of elements
         for (int idx = 1; idx <= noe; idx++) {
             int value = genVal(RANDOM_RANGE_);
-            tc += "push " + value + "\n";
+            tc += "enqueue " + value + "\n";
 
-            stack.push(value);
+            queue.addLast(value);
         }
 
         // peek
-        tc += "peek = " + stack.peek().toString() + "\n";
+        tc += "peek = " + queue.peekFirst().toString() + "\n";
 
         // print result
-        tc += printStack(stack);
+        tc += printQueue(queue);
 
         return tc;
     }
 
-    // 1.3 push (empty or non-empty stack)
+    // 1.3 enqueue (empty or non-empty queue)
     public String genTC1dot3(String tc) {
-        // construct a stack to generate result
-        Stack<Integer> stack = new Stack<>();
+        // construct a queue to generate result
+        ArrayDeque<Integer> queue = new ArrayDeque<>();
 
         int noe = genIdx(RANDOM_RANGE_) + 1; // number of elements
         for (int idx = 1; idx <= noe; idx++) {
             int value = genVal(RANDOM_RANGE_);
-            tc += "push " + value + "\n";
+            tc += "enqueue " + value + "\n";
 
-            stack.push(value);
+            queue.addLast(value);
         }
 
         // print result
-        tc += printStack(stack);
+        tc += printQueue(queue);
 
         return tc;
     }
 
-    // 1.4 pop (non-empty stack)
+    // 1.4 dequeue (non-empty queue)
     public String genTC1dot4(String tc) {
-        // construct a stack to generate result
-        Stack<Integer> stack = new Stack<>();
+        // construct a queue to generate result
+        ArrayDeque<Integer> queue = new ArrayDeque<>();
 
-        // first create a stack with elements
+        // first create a queue with elements
         int noe = genIdx(RANDOM_RANGE_) + 1; // number of elements
         for (int idx = 1; idx <= noe; idx++) {
             int value = genVal(RANDOM_RANGE_);
-            tc += "push " + value + "\n";
+            tc += "enqueue " + value + "\n";
 
-            stack.push(value);
+            queue.addLast(value);
         }
 
-        // then pop
-        tc += "pop = " + stack.pop().toString() + "\n";
+        // then dequeue
+        tc += "dequeue = " + queue.pollFirst().toString() + "\n";
 
         // print result
-        tc += printStack(stack);
+        tc += printQueue(queue);
 
         return tc;
     }
 
     // 2. Order
-    // 2.1 push more than pop (result in non-empty stack)
+    // 2.1 enqueue more than dequeue (result in non-empty queue)
     public String genTC2dot1(String tc) {
-        // construct a stack to generate result
-        Stack<Integer> stack = new Stack<>();
+        // construct a queue to generate result
+        ArrayDeque<Integer> queue = new ArrayDeque<>();
 
-        // first create a stack with elements
+        // first create a queue with elements
         int noe = genIdx(RANDOM_RANGE_) + 1; // number of elements
         for (int idx = 1; idx <= noe; idx++) {
             int value = genVal(RANDOM_RANGE_);
-            tc += "push " + value + "\n";
+            tc += "enqueue " + value + "\n";
 
-            stack.push(value);
+            queue.addLast(value);
         }
 
-        // then pop some
+        // then dequeue some
         int noe2delete = genIdx(noe);
         for (int idx = noe2delete; idx > 0; idx--)
-            tc += "pop = " + stack.pop().toString() + "\n";
+            tc += "dequeue = " + queue.pollFirst().toString() + "\n";
 
 
         // print result
-        tc += printStack(stack);
+        tc += printQueue(queue);
 
         return tc;
     }
 
-    // 2.2 push the same with pop (result in empty stack)
+    // 2.2 enqueue the same with dequeue (result in empty queue)
     public String genTC2dot2(String tc) {
-        // construct a stack to generate result
-        Stack<Integer> stack = new Stack<>();
+        // construct a queue to generate result
+        ArrayDeque<Integer> queue = new ArrayDeque<>();
 
-        // first create a stack with elements
+        // first create a queue with elements
         int noe = genIdx(RANDOM_RANGE_) + 1; // number of elements
         for (int idx = 1; idx <= noe; idx++) {
             int value = genVal(RANDOM_RANGE_);
-            tc += "push " + value + "\n";
+            tc += "enqueue " + value + "\n";
 
-            stack.push(value);
+            queue.addLast(value);
         }
 
-        // then pop all of them
+        // then dequeue all of them
         int noe2delete = noe;
         for (int idx = noe2delete; idx > 0; idx--)
-            tc += "pop = " + stack.pop().toString() + "\n";
+            tc += "dequeue = " + queue.pollFirst().toString() + "\n";
 
 
         // print result
-        tc += printStack(stack);
+        tc += printQueue(queue);
 
         return tc;
     }
 
     // 3. Abnormal
-    // 3.1 peek from empty stack
+    // 3.1 peek from empty queue
     public String genTC3dot1(String tc) {
         tc += "peek = \n";
 
         return tc;
     }
 
-    // 3.2 pop from empty stack
+    // 3.2 dequeue from empty queue
     public String genTC3dot2(String tc) {
-        // construct a stack to generate result
-        tc += "pop = \n";;
+        // construct a queue to generate result
+        tc += "dequeue = \n";;
 
         return tc;
     }
 
-    // 3.3 pop more than push
+    // 3.3 dequeue more than enqueue
     public String genTC3dot3(String tc) {
-        // construct a stack to generate result
-        Stack<Integer> stack = new Stack<>();
+        // construct a queue to generate result
+        ArrayDeque<Integer> queue = new ArrayDeque<>();
 
-        // first create a stack with elements
+        // first create a queue with elements
         int noe = genIdx(RANDOM_RANGE_) + 1; // number of elements
         for (int idx = 1; idx <= noe; idx++) {
             int value = genVal(RANDOM_RANGE_);
-            tc += "push " + value + "\n";
+            tc += "enqueue " + value + "\n";
 
-            stack.push(value);
+            queue.addLast(value);
         }
 
-        // then pop all of them
+        // then dequeue all of them
         int noe2delete = noe + genIdx(RANDOM_RANGE_) + 1;
         for (int idx = 0; idx < noe2delete; ++idx) {
             if (idx < noe)
-                tc += "pop = " + stack.pop().toString() + "\n";
+                tc += "dequeue = " + queue.pollFirst().toString() + "\n";
             else
-                tc += "pop = \n";
+                tc += "dequeue = \n";
         }
 
         // print result
-        tc += printStack(stack);
+        tc += printQueue(queue);
 
         return tc;
     }
 
-    // 3.4 push to full stack (not for linked list implementation)
+    // 3.4 enqueue to full queue (not for linked list implementation)
 
 
     public static void main(String[] args) throws IOException {
-        TCGStack tcg = new TCGStack();
+        TCGQueue tcg = new TCGQueue();
         String tc = "";
 
         // for text.txt, include all normal cases

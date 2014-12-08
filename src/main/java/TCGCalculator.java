@@ -1,7 +1,5 @@
 import util.Calculator;
 
-import java.util.BitSet;
-import java.util.HashSet;
 
 /**
  * Created by Xing HU on 10/13/14.
@@ -137,8 +135,9 @@ public class TCGCalculator extends TestCaseGenerator {
                     }
                     break;
                 case ASSIGNMENT_:
-//                    double answer = cal.solve(formula);
+                    double answer = cal.solve(formula);
                     tc += formula;
+                    tc += answer;
                     System.out.println(tc);
                     return;
                 default:
@@ -154,7 +153,7 @@ public class TCGCalculator extends TestCaseGenerator {
         tcg.setValDistinct_(false);
 
         for (int i = 0; i < 10; ++i) {
-            String tc = i + ": ";
+            String tc = "";
             tcg.genTC(tc);
         }
     }
